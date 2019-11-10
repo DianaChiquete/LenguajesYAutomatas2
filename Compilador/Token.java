@@ -46,6 +46,6 @@ public class Token
 		this.id = id;
 	}
 	public String toString() {
-		return getTipo()+"\n"+getValor()+"\n"+getLinea()+"\n"+getId()+"\n";
+		return getTipo()+"\n"+getValor()+"\n"+getId()+"\n";
 	}
 }

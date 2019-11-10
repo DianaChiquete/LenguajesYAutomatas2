@@ -14,9 +14,9 @@ public class Sintactico {
 		puntero=0;
 		analisisSintactico(PalabrasAnalizadas);
 		if(ErrorS)
-			JOptionPane.showMessageDialog(null, "Ocurrio Un Error Sintactico.", "ERROR",JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Ocurrio Un Error Sintactico.", "Warning",JOptionPane.WARNING_MESSAGE);
 		else
-			JOptionPane.showMessageDialog(null, "Completado, codigo sin errorres");
+			JOptionPane.showMessageDialog(null, "Exito");
 		
 		/*
 		System.out.println("Declaradas");
