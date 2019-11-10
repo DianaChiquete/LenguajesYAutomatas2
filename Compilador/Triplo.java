@@ -14,7 +14,6 @@ public class Triplo {
 	private ArrayList<String> conResta;
 	private ArrayList<String> conConsecutivo;
 	private String finalEcu = "";
-	private String iniEcu = "";
 	private ArrayList<String> modEcuacion;
 
 	public void resultado(String ecuacion) {
@@ -26,19 +25,15 @@ public class Triplo {
 		conResta = new ArrayList<String>();
 		conConsecutivo = new ArrayList<String>();
 		finalEcu = "";
-		iniEcu = ecuacion;
 
 		modEcuacion = new ArrayList<String>(Arrays.asList(ecuacion.split(" ")));
 
 		if (busquedaOperadores(ecuacion)) {
-			System.out.println("--- Ecuacion valida ---");
-
 			if (conMultiplicacion.size() != 0) {
 				for (String valor : conMultiplicacion) {
 					int valPos = Integer.parseInt(valor);
 					int verfConse = valPos + 1;
 					if (conConsecutivo.contains(Integer.toString(verfConse))) {
-						System.out.println("--- Tiene un consecutivo ---");
 						agregaConsecutivo(modEcuacion, verfConse);
 						agregaValor(modEcuacion, valPos, true);
 					} else {
@@ -54,7 +49,6 @@ public class Triplo {
 					int valPos = Integer.parseInt(valor);
 					int verfConse = valPos + 1;
 					if (conConsecutivo.contains(Integer.toString(verfConse))) {
-						System.out.println("--- Tiene un consecutivo ---");
 						agregaConsecutivo(modEcuacion, verfConse);
 						agregaValor(modEcuacion, valPos, true);
 					} else {
@@ -70,7 +64,6 @@ public class Triplo {
 					int valPos = Integer.parseInt(valor);
 					int verfConse = valPos + 1;
 					if (conConsecutivo.contains(Integer.toString(verfConse))) {
-						System.out.println("--- Tiene un consecutivo ---");
 						agregaConsecutivo(modEcuacion, verfConse);
 						agregaValor(modEcuacion, valPos, true);
 					} else {
@@ -86,7 +79,6 @@ public class Triplo {
 					int valPos = Integer.parseInt(valor);
 					int verfConse = valPos + 1;
 					if (conConsecutivo.contains(Integer.toString(verfConse))) {
-						System.out.println("--- Tiene un consecutivo ---");
 						agregaConsecutivo(modEcuacion, verfConse);
 						agregaValor(modEcuacion, valPos, true);
 					} else {
@@ -100,8 +92,6 @@ public class Triplo {
 			// Agrega ultimo nivel
 			int lstLv = niveles.size();
 			niveles.add(finalEcu + " " + "(" + (lstLv - 1) + ")");
-
-			imprimeNiveles();
 		}
 	}
 
@@ -112,22 +102,14 @@ public class Triplo {
 		boolean sgIgual = false;
 
 		for (int i = 0; i < tamaño; i++) {
-			// Si ya salio el signo igual terminamos el ciclo
 			if (sgIgual) {
 				break;
 			}
 
-			// Variables
 			int posicion = tamaño - (i + 1);
 			String valor = nuevaEcuacion[posicion];
 
-			// Valor obtenido por linea
-			System.out.println("Vuelta(" + i + ")" + valor);
-
-			// Obtener la posicion de los operadores
 			if (operadorIdentificado(valor, posicion)) {
-				System.out.println("--- Es un operador : " + valor + " ---");
-
 				switch (valor) {
 				case "=":
 					finalEcu = valor + " " + nuevaEcuacion[posicion - 1];
@@ -135,10 +117,6 @@ public class Triplo {
 					break;
 				case "-":
 					if (operadorConsecutivo(nuevaEcuacion[posicion - 1])) {
-						System.out.println(
-								"Operadores consecutivos: " + nuevaEcuacion[posicion - 1] + nuevaEcuacion[posicion]);
-						System.out.println(
-								"Es un valor negativo: " + nuevaEcuacion[posicion] + nuevaEcuacion[posicion + 1]);
 						conConsecutivo.add(Integer.toString(posicion));
 					}
 				default:
@@ -177,11 +155,7 @@ public class Triplo {
 		return false;
 	}
 
-	// En caso de encontrar un caracter negativo ( - )
-	// Verifica una posicion anterior y si encuentra otro operador,
-	// entonces lo toma como valor negativo
 	private boolean operadorConsecutivo(String opr) {
-		System.out.println("Busca operador consecutivo");
 		switch (opr) {
 		case "*":
 			return true;
@@ -195,21 +169,16 @@ public class Triplo {
 			return true;
 		}
 
-		System.out.println("No tiene operadores consecutivos");
 		return false;
 	}
 
 	private boolean agregaConsecutivo(ArrayList<String> ecuacion, int posicion) {
-		// Agregamos el valor
 		String val = ecuacion.get(posicion) + " " + ecuacion.get(posicion + 1);
 		niveles.add(val);
-		int lstLv = niveles.size();
-		modEcuacion.set(posicion, "(" + (lstLv - 1) + ")");
-		modEcuacion.set(posicion + 1, "(" + (lstLv - 1) + ")");
+		int posCon = niveles.size();
+		modEcuacion.set(posicion, "(" + (posCon - 1) + ")");
+		modEcuacion.set(posicion + 1, "(" + (posCon - 1) + ")");
 
-		System.out.println();
-		System.out.println("--- Nivel agregado ---");
-		System.out.println();
 		return true;
 	}
 
@@ -217,44 +186,38 @@ public class Triplo {
 		if (consecutivo) {
 			int posCon = niveles.size();
 			boolean negativo = false;
-			
+
 			if (ecuacion.get(posicion - 2).equals("-")) {
-				System.out.println("-- Valor negativo ---");
 				agregaConsecutivo(modEcuacion, posicion - 2);
 				negativo = true;
 			}
 
 			String val = ecuacion.get(posicion) + " " + ecuacion.get(posicion - 1) + " " + "(" + (posCon - 1) + ")";
 			niveles.add(val);
-			int lstLv = niveles.size();
+			int posCon2 = niveles.size();
 
 			if (negativo) {
-				modEcuacion.set(posicion - 2, "T" + (lstLv - 1));
+				modEcuacion.set(posicion - 2, "(" + (posCon2 - 1) + ")");
 			}
-			modEcuacion.set(posicion - 1, "(" + (lstLv - 1) + ")");
-			modEcuacion.set(posicion, "(" + (lstLv - 1) + ")");
-			
-			buscaRemplaza("(" + (posCon - 1) + ")", "(" + (lstLv - 1) + ")");
-			
+
+			modEcuacion.set(posicion - 1, "(" + (posCon2 - 1) + ")");
+			modEcuacion.set(posicion, "(" + (posCon2 - 1) + ")");
+
+			buscaRemplaza("(" + (posCon - 1) + ")", "(" + (posCon2 - 1) + ")");
 		} else {
 			if (ecuacion.get(posicion - 2).equals("-")) {
-				System.out.println("-- Valor negativo ---");
 				agregaConsecutivo(modEcuacion, posicion - 2);
 			}
 
 			niveles.add(ecuacion.get(posicion) + " " + ecuacion.get(posicion - 1) + " " + ecuacion.get(posicion + 1));
-			int lstLv = niveles.size();
-			
-			modEcuacion.set(posicion - 1, "(" + (lstLv - 1) + ")");
-			modEcuacion.set(posicion, "(" + (lstLv - 1) + ")");
-			modEcuacion.set(posicion + 1, "(" + (lstLv - 1) + ")");
-			
-			buscaRemplaza("(" + (posicion + 1) + ")", "(" + (lstLv - 1) + ")");
-		}
+			int posCon = niveles.size();
 
-		System.out.println();
-		System.out.println("--- Nivel agregado ---");
-		System.out.println();
+			modEcuacion.set(posicion - 1, "(" + (posCon - 1) + ")");
+			modEcuacion.set(posicion, "(" + (posCon - 1) + ")");
+			modEcuacion.set(posicion + 1, "(" + (posCon - 1) + ")");
+
+			buscaRemplaza("(" + (posicion + 1) + ")", "(" + (posCon - 1) + ")");
+		}
 	}
 
 	private void buscaRemplaza(String actualVal, String nuevoVal) {
@@ -262,22 +225,6 @@ public class Triplo {
 			if (modEcuacion.get(i).equals(actualVal)) {
 				modEcuacion.set(i, nuevoVal);
 			}
-		}
-	}
-
-	private void imprimeNiveles() {
-		int con = 0;
-
-		System.out.println(iniEcu);
-		System.out.println(modEcuacion);
-
-		System.out.println();
-		System.out.println("--- Imprimir niveles ---");
-		System.out.println();
-
-		for (String nivel : niveles) {
-			System.out.println("Nivel(" + con + "): " + nivel);
-			con++;
 		}
 	}
 }
