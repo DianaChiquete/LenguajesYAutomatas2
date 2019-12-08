@@ -6,13 +6,17 @@ public class Variables
 	private int tipo;
 	private String valor;
 	private int linea;
+	private int uso;
+	//Uso En variables 	0 = declaracion / 	1 = asignacion
+	//Uso En Ifs		0 = inicio		/	1 = fin
 	
-	public Variables(String variable, int tipo,String valor,int linea)
+	public Variables(String variable, int tipo,String valor,int linea, int uso)
 	{
 		this.variable=variable;
 		this.tipo=tipo;
 		this.valor=valor;
 		this.linea=linea;
+		this.uso=uso;
 	}
 	
 	public String getVariable()
@@ -31,6 +35,11 @@ public class Variables
 	{
 		return linea;
 	}
+	public int getUso()
+	{
+		return uso;
+	}
+	
 	
 	public void setVariable(String variable)
 	{
@@ -48,8 +57,12 @@ public class Variables
 	{
 		this.linea = linea;
 	}
+	public void setUso(int uso)
+	{
+		this.uso = uso;
+	}
 	
 	public String toString() {
-		return getVariable()+"\n"+getTipo()+"\n"+getValor()+"\n"+getLinea()+"\n";
+		return "variable="+getVariable()+", Tipo="+getTipo()+", Valor="+getValor()+", Linea="+getLinea()+", Uso="+getUso()+"\n";
 	}
 }

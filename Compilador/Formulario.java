@@ -9,15 +9,15 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 public class Formulario extends JFrame implements KeyListener, ActionListener {
-	JButton btnScan, btnPars, btnSem, btnAbrir, btnGuardar, btnLimpia, btnTriplo, btnCuadruplo;
-	JTextArea codigo, tok;
-	JScrollPane sCod, sTok, sTrpl, sCrpl;
+	JButton btnScan, btnPars, btnSem, btnAbrir, btnGuardar, btnLimpia, btnTriplo, btnCuadruplo, btnIntermedio;
+	JTextArea codigo, tok, Inter;
+	JScrollPane sCod, sTok, sTrpl, sCrpl,sInter;
 
 	DefaultTableModel modelo;
 	DefaultTableModel tbTriplo;
 	DefaultTableModel tbCuadruplo;
 	String titulos[] = { "Tipo", "Valor" };
-	String titulosTriplo[] = { "", "OP", "ARG1", "ARG2" };
+	String titulosTriplo[] = { "#R", "OP", "ARG1", "ARG2" };
 	String titulosCuadruplos[] = { "#R", "OP", "ARG1", "ARG2", "RES" };
 	JTable tabla, tabla1, tabla2;
 	JLabel lblEcu;
@@ -28,6 +28,7 @@ public class Formulario extends JFrame implements KeyListener, ActionListener {
 	Sintactico sin;
 	Semantico sem;
 	Triplo trpl = new Triplo();
+	Intermedio Interm;
 	Cuadruplo crpl = new Cuadruplo();
 
 	public Formulario() {
@@ -35,7 +36,7 @@ public class Formulario extends JFrame implements KeyListener, ActionListener {
 	}
 
 	public void Interfaz() {
-		setSize(570, 700);
+		setSize(700, 600);
 		setLocationRelativeTo(null);
 		setResizable(false);
 		setLayout(null);
@@ -62,20 +63,24 @@ public class Formulario extends JFrame implements KeyListener, ActionListener {
 		btnAbrir = new JButton("Abrir");
 		btnGuardar = new JButton("Guardar");
 		btnLimpia = new JButton("Limpiar");
-		btnScan = new JButton("Scan");
-		btnPars = new JButton("Parser");
+		btnScan = new JButton("Analizar");
+		btnPars = new JButton("Sintactico");
 		btnSem = new JButton("Semantico");
 		btnTriplo = new JButton("Triplo");
 		btnCuadruplo = new JButton("Cuadruplo");
+		btnIntermedio = new JButton("Ensamblador");
 		codigo = new JTextArea();
 		tok = new JTextArea();
+		Inter = new JTextArea();
 
 		sCod = new JScrollPane(codigo);
+		sInter = new JScrollPane(Inter);
 
 		JLabel lblProg = new JLabel("Programa");
 		JLabel lblTok = new JLabel("Tokens");
 		JLabel lblTrpl = new JLabel("Triplos");
 		JLabel lblCrpl = new JLabel("Cuadruplos");
+		JLabel lblIntermedio = new JLabel("Codigo Ensamblador");
 		lblEcu = new JLabel("Ecuacion: ");
 
 		// Boton.setBounds(x,y,largo,alto);
@@ -84,24 +89,28 @@ public class Formulario extends JFrame implements KeyListener, ActionListener {
 		btnLimpia.setBounds(180, 10, 80, 20);// BotonLimpiar
 		lblProg.setBounds(10, 30, 60, 20);// Label Programa
 		sCod.setBounds(10, 50, 260, 200);// TextAreaCodigo
-		btnScan.setBounds(10, 260, 70, 30);// BotonScan
+		btnScan.setBounds(10, 260, 80, 30);// BotonScan
 		lblTok.setBounds(10, 350, 60, 20);// Label Tokens
 		sTok.setBounds(10, 380, 260, 240);// TextAreaTokens
-		btnPars.setBounds(90, 260, 80, 30);// BotonParser
-		btnSem.setBounds(180, 260, 100, 30);
+		btnPars.setBounds(95, 260, 95, 30);// BotonParser
+		btnSem.setBounds(195, 260, 95, 30);
 		lblEcu.setBounds(300, 30, 300, 20);// Ecuacion encontrada
-
+		lblIntermedio.setBounds(400,50,130,20);//Label Intermedio
+		btnIntermedio.setBounds(120,300,110,30);//Boton intermedio
+		
+		sInter.setBounds(310,70,370,200);//Cuadro del Codigo intemedio
+		
 		// Triplos
-		lblTrpl.setBounds(300, 60, 100, 20);
-		sTrpl.setBounds(300, 80, 250, 200);
+		lblTrpl.setBounds(300,300, 100, 20);
+		sTrpl.setBounds(310,320, 250, 200);
 
-		btnTriplo.setBounds(10, 300, 100, 30);
+		btnTriplo.setBounds(10,300, 100, 30);//Boton
 
 		// Cuadruplos
-		lblCrpl.setBounds(300, 330, 100, 20);
-		sCrpl.setBounds(300, 350, 250, 200);
+		//lblCrpl.setBounds(300, 330, 100, 20);
+		//sCrpl.setBounds(300, 350, 250, 200);
 
-		btnCuadruplo.setBounds(120, 300, 100, 30);
+		//btnCuadruplo.setBounds(120, 300, 100, 30);
 
 		add(btnGuardar);
 		add(btnAbrir);
@@ -116,10 +125,13 @@ public class Formulario extends JFrame implements KeyListener, ActionListener {
 		add(lblTrpl);
 		add(sTrpl);
 		add(btnTriplo);
-		add(lblCrpl);
+		//add(lblCrpl);
 		add(sCrpl);
 		add(btnCuadruplo);
 		add(lblEcu);
+		add(lblIntermedio);
+		add(btnIntermedio);
+		add(sInter);
 
 		Escuchadores();
 		deshabilita();
@@ -135,6 +147,7 @@ public class Formulario extends JFrame implements KeyListener, ActionListener {
 		btnGuardar.setEnabled(false);
 		btnTriplo.setEnabled(false);
 		btnCuadruplo.setEnabled(false);
+		btnIntermedio.setEnabled(false);
 	}
 
 	public void Escuchadores() {
@@ -148,6 +161,7 @@ public class Formulario extends JFrame implements KeyListener, ActionListener {
 		btnCuadruplo.addActionListener(this);
 		btnGuardar.addActionListener(this);
 		btnLimpia.addActionListener(this);
+		btnIntermedio.addActionListener(this);
 	}
 
 	public void actionPerformed(ActionEvent evt) {
@@ -190,6 +204,15 @@ public class Formulario extends JFrame implements KeyListener, ActionListener {
 		}
 		if (evt.getSource() == btnSem) {
 			sem = new Semantico(sin.declaradas, sin.asignadas);
+			if(!sem.ErrorSem){
+				btnSem.setEnabled(false);
+				btnIntermedio.setEnabled(true);
+			}
+			return;
+		}
+		if(evt.getSource()==btnIntermedio){
+			Interm = new Intermedio(sin.TablaSimbolos);
+			Inter.setText(Interm.Ensamblador);
 			return;
 		}
 		if (evt.getSource() == btnTriplo) {
@@ -217,11 +240,13 @@ public class Formulario extends JFrame implements KeyListener, ActionListener {
 			btnSem.setEnabled(false);
 			btnTriplo.setEnabled(false);
 			btnCuadruplo.setEnabled(false);
+			btnIntermedio.setEnabled(false);
 			codigo.setText("");
 			lblEcu.setText("Ecuacion: ");
 			limpiarTabla();
 			limpiarTablaTriplo();
 			limpiarTablaCuadruplo();
+			
 			return;
 		}
 	}
